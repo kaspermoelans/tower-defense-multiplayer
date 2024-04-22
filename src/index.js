@@ -252,7 +252,7 @@ let damageMultiplierCost = 100
 let gold = 10
 let difficulty = {
     enemySpawnCount: 1,
-    enemyHealth: 2
+    enemyHealth: 1
 }
 let waveCountdown = 1000
 
@@ -405,7 +405,7 @@ function tick(delta) {
             gold = 10
             difficulty = {
                 enemySpawnCount: 1,
-                enemyHealth: 2
+                enemyHealth: 1
             }
             waveCountdown = 1000
 
@@ -489,8 +489,8 @@ function tick(delta) {
                     }
                 }
 
-                difficulty.enemySpawnCount += 1
-                difficulty.enemyHealth += 1
+                difficulty.enemySpawnCount += 0.5
+                difficulty.enemyHealth += 0.5
                 waveCountdown = 2000
             }
             
