@@ -5,7 +5,7 @@ const { Server } = require("socket.io");
 
 const app = express()
 const httpServer = createServer(app);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5555;
 
 const io = new Server(httpServer);
 
@@ -52,11 +52,21 @@ const towerStatsLevel1 = [
         type: 'magic',
         damage: 0.5,
         speed: 500,
-        timeRange: 10000,
+        timeRange: 5000,
         projectiles: [],
         countdown: 500,
-        projectileSpeed: 10,
+        projectileSpeed: 15,
         cost: 100
+    },
+    {
+        type: 'slime',
+        damage: 0.2,
+        speed: 1000,
+        timeRange: 3000,
+        projectiles: [],
+        countdown: 1000,
+        projectileSpeed: 7,
+        cost: 200   
     },
     {
         type: 'electric',
@@ -66,7 +76,27 @@ const towerStatsLevel1 = [
         projectiles: [],
         countdown: 250,
         projectileSpeed: 15,
-        cost: 200
+        cost: 400
+    },
+    {
+        type: 'slingshot',
+        damage: 10,
+        speed: 3000,
+        timeRange: 10000,
+        projectiles: [],
+        countdown: 3000,
+        projectileSpeed: 40,
+        cost: 800
+    },
+    {
+        type: 'crystal',
+        damage: 50,
+        speed: 2000,
+        timeRange: 1000,
+        projectiles: [],
+        countdown: 3000,
+        projectileSpeed: 15,
+        cost: 1600
     }
 ]
 
@@ -95,11 +125,21 @@ const towerStatsLevel2 = [
         type: 'magic',
         damage: 1,
         speed: 250,
-        timeRange: 15000,
+        timeRange: 10000,
         projectiles: [],
         countdown: 250,
-        projectileSpeed: 15,
+        projectileSpeed: 20,
         cost: 100
+    },
+    {
+        type: 'slime',
+        damage: 0.5,
+        speed: 750,
+        timeRange: 3000,
+        projectiles: [],
+        countdown: 750,
+        projectileSpeed: 10,
+        cost: 200   
     },
     {
         type: 'electric',
@@ -109,7 +149,27 @@ const towerStatsLevel2 = [
         projectiles: [],
         countdown: 125,
         projectileSpeed: 20,
-        cost: 200
+        cost: 400
+    },
+    {
+        type: 'slingshot',
+        damage: 20,
+        speed: 2500,
+        timeRange: 10000,
+        projectiles: [],
+        countdown: 2500,
+        projectileSpeed: 50,
+        cost: 800
+    },
+    {
+        type: 'crystal',
+        damage: 100,
+        speed: 2000,
+        timeRange: 1000,
+        projectiles: [],
+        countdown: 3000,
+        projectileSpeed: 20,
+        cost: 1600
     }
 ]
 
@@ -138,11 +198,21 @@ const towerStatsLevel3 = [
         type: 'magic',
         damage: 2,
         speed: 125,
-        timeRange: 20000,
+        timeRange: 15000,
         projectiles: [],
-        countdown: 125,
-        projectileSpeed: 20,
+        countdown: 250,
+        projectileSpeed: 25,
         cost: 100
+    },
+    {
+        type: 'slime',
+        damage: 1,
+        speed: 500,
+        timeRange: 3000,
+        projectiles: [],
+        countdown: 500,
+        projectileSpeed: 13,
+        cost: 200   
     },
     {
         type: 'electric',
@@ -153,13 +223,33 @@ const towerStatsLevel3 = [
         countdown: 75,
         projectileSpeed: 25,
         cost: 200
+    },
+    {
+        type: 'slingshot',
+        damage: 20,
+        speed: 2000,
+        timeRange: 10000,
+        projectiles: [],
+        countdown: 2000,
+        projectileSpeed: 65,
+        cost: 800
+    },
+    {
+        type: 'crystal',
+        damage: 150,
+        speed: 2000,
+        timeRange: 1000,
+        projectiles: [],
+        countdown: 3000,
+        projectileSpeed: 25,
+        cost: 1600
     }
 ]
 
 let damageMultiplier = 1
 let damageMultiplierCost = 100
 
-let gold = 10
+let gold = 10000
 let difficulty = {
     enemySpawnCount: 1,
     enemyHealth: 2
@@ -263,7 +353,7 @@ function tick(delta) {
                     min.enemy = enemy
                 }
             }
-            if (min.x !== undefined && min.y !== undefined && !min.inRange) {
+            if (min.disctance < tower.projectileSpeed * (tower.timeRange / 1000 * TICK_RATE) && min.x !== undefined && min.y !== undefined && !min.inRange) {
                 const angle = Math.atan2(min.y, min.x)
                 tower.projectiles.push({x: tower.x + TOWER_WIDTH / 2, y: tower.y + TOWER_HEIGHT / 2, angle: angle, delete: true, target: {x: min.enemy.x, y: min.enemy.y}, timeRange: tower.timeRange})
             }
@@ -286,7 +376,9 @@ function tick(delta) {
                             gold += GOLD_PER_ENEMY
                         }
                     }
-                    projectile.timeRange = 0
+                    if (tower.type !== 'slime') {
+                        projectile.timeRange = 0
+                    }
                 }
             }
 
