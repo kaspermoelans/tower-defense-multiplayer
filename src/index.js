@@ -135,6 +135,16 @@ const towerStatsLevel3 = [
         cost: 50
     },
     {
+        type: 'magic',
+        damage: 2,
+        speed: 125,
+        timeRange: 20000,
+        projectiles: [],
+        countdown: 125,
+        projectileSpeed: 20,
+        cost: 100
+    },
+    {
         type: 'electric',
         damage: 3,
         speed: 75,
