@@ -249,7 +249,7 @@ const towerStatsLevel3 = [
 let damageMultiplier = 1
 let damageMultiplierCost = 100
 
-let gold = 10000
+let gold = 10
 let difficulty = {
     enemySpawnCount: 1,
     enemyHealth: 2
