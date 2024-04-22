@@ -3,7 +3,7 @@ canvasEl.width = window.innerWidth;
 canvasEl.height = window.innerHeight;
 const canvas = canvasEl.getContext("2d");
 
-const socket = io();
+const socket = io(`ws://localhost:5555`);
 
 const santaImage = new Image();
 santaImage.src = "/img/santa.png";
@@ -29,6 +29,13 @@ magicTower2Image.src = "/img/magicTower2.png";
 const magicTower3Image = new Image();
 magicTower3Image.src = "/img/magicTower3.png";
 
+const slimeTower1Image = new Image();
+slimeTower1Image.src = "/img/slimeTower1.png";
+const slimeTower2Image = new Image();
+slimeTower2Image.src = "/img/slimeTower2.png";
+const slimeTower3Image = new Image();
+slimeTower3Image.src = "/img/slimeTower3.png";
+
 const electricTower1Image = new Image();
 electricTower1Image.src = "/img/electricTower1.png";
 const electricTower2Image = new Image();
@@ -36,11 +43,19 @@ electricTower2Image.src = "/img/electricTower2.png";
 const electricTower3Image = new Image();
 electricTower3Image.src = "/img/electricTower3.png";
 
-const fireTowerImage = new Image();
-fireTowerImage.src = "/img/fireTower.png";
+const slingshotTower1Image = new Image();
+slingshotTower1Image.src = "/img/slingshotTower1.png";
+const slingshotTower2Image = new Image();
+slingshotTower2Image.src = "/img/slingshotTower2.png";
+const slingshotTower3Image = new Image();
+slingshotTower3Image.src = "/img/slingshotTower3.png";
 
-const stoneTowerImage = new Image();
-stoneTowerImage.src = "/img/stoneTower.png";
+const crystalTower1Image = new Image();
+crystalTower1Image.src = "/img/crystalTower1.png";
+const crystalTower2Image = new Image();
+crystalTower2Image.src = "/img/crystalTower2.png";
+const crystalTower3Image = new Image();
+crystalTower3Image.src = "/img/crystalTower3.png";
 
 let players = []
 let snowballs = []
@@ -111,7 +126,13 @@ window.addEventListener('keydown', (e) => {
     } else if (e.key === '3') {
       selectedTower = 'magic'
     } else if (e.key === '4') {
+      selectedTower = 'slime'
+    } else if (e.key === '5') {
       selectedTower = 'electric'
+    } else if (e.key === '6') {
+      selectedTower = 'slingshot'
+    } else if (e.key === '7') {
+      selectedTower = 'crystal'
     } else if (e.key === 'u') {
       socket.emit('upgrade', socket.id)
     } else if (e.key === '0') {
@@ -213,6 +234,14 @@ function loop() {
       } else if (tower.level === 3) {
         canvas.drawImage(magicTower3Image, tower.x - cameraX, tower.y - cameraY)
       }
+    } else if (tower.type === 'slime') {
+      if (tower.level === 1) {
+        canvas.drawImage(slimeTower1Image, tower.x - cameraX, tower.y - cameraY)
+      } else if (tower.level === 2) {
+        canvas.drawImage(slimeTower2Image, tower.x - cameraX, tower.y - cameraY)
+      } else if (tower.level === 3) {
+        canvas.drawImage(slimeTower3Image, tower.x - cameraX, tower.y - cameraY)
+      }
     } else if (tower.type === 'electric') {
       if (tower.level === 1) {
         canvas.drawImage(electricTower1Image, tower.x - cameraX, tower.y - cameraY)
@@ -220,6 +249,22 @@ function loop() {
         canvas.drawImage(electricTower2Image, tower.x - cameraX, tower.y - cameraY)
       } else if (tower.level === 3) {
         canvas.drawImage(electricTower3Image, tower.x - cameraX, tower.y - cameraY)
+      }
+    } else if (tower.type === 'slingshot') {
+      if (tower.level === 1) {
+        canvas.drawImage(slingshotTower1Image, tower.x - cameraX, tower.y - cameraY)
+      } else if (tower.level === 2) {
+        canvas.drawImage(slingshotTower2Image, tower.x - cameraX, tower.y - cameraY)
+      } else if (tower.level === 3) {
+        canvas.drawImage(slingshotTower3Image, tower.x - cameraX, tower.y - cameraY)
+      }
+    } else if (tower.type === 'crystal') {
+      if (tower.level === 1) {
+        canvas.drawImage(crystalTower1Image, tower.x - cameraX, tower.y - cameraY)
+      } else if (tower.level === 2) {
+        canvas.drawImage(crystalTower2Image, tower.x - cameraX, tower.y - cameraY)
+      } else if (tower.level === 3) {
+        canvas.drawImage(crystalTower3Image, tower.x - cameraX, tower.y - cameraY)
       }
     }
 
@@ -234,11 +279,33 @@ function loop() {
       if (tower.level === 2) {
         canvas.fillStyle = "rgba(200, 20, 255, 1)"
       }
-      if (tower.level === 2) {
+      if (tower.level === 3) {
         canvas.fillStyle = "rgba(255, 20, 20, 1)"
       }
+    } else if (tower.type === 'slime') {
+      canvas.fillStyle = "rgba(0, 255, 0, 1)"
     } else if (tower.type === 'electric') {
       canvas.fillStyle = "rgba(250, 250, 0, 1)"
+    } else if (tower.type === 'slingshot') {
+      if (tower.level === 1) {
+        canvas.fillStyle = "rgba(255, 0, 255, 1)"
+      }
+      if (tower.level === 2) {
+        canvas.fillStyle = "rgba(0, 255, 0, 1)"
+      }
+      if (tower.level === 3) {
+        canvas.fillStyle = "rgba(255, 180, 0, 1)"
+      }
+    } else if (tower.type === 'crystal') {
+      if (tower.level === 1) {
+        canvas.fillStyle = "rgba(20, 20, 255, 1)"
+      }
+      if (tower.level === 2) {
+        canvas.fillStyle = "rgba(255, 180, 0, 1)"
+      }
+      if (tower.level === 3) {
+        canvas.fillStyle = "rgba(20, 255, 20, 1)"
+      }
     }
 
     for (const projectile of tower.projectiles) {
@@ -284,8 +351,14 @@ function loop() {
       canvas.drawImage(crossbowTower1Image, x - cameraX, y - cameraY)
     } else if (selectedTower === 'magic') {
       canvas.drawImage(magicTower1Image, x - cameraX, y - cameraY)
+    } else if (selectedTower === 'slime') {
+      canvas.drawImage(slimeTower1Image, x - cameraX, y - cameraY)
     } else if (selectedTower === 'electric') {
       canvas.drawImage(electricTower1Image, x - cameraX, y - cameraY)
+    } else if (selectedTower === 'slingshot') {
+      canvas.drawImage(slingshotTower1Image, x - cameraX, y - cameraY)
+    } else if (selectedTower === 'crystal') {
+      canvas.drawImage(crystalTower1Image, x - cameraX, y - cameraY)
     }
   }
 
